@@ -1,0 +1,21 @@
+{
+  "name": "cosense-userscript-dev",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "cosense-userscript-dev": "./src/cli.ts"
+  },
+  "exports": {
+    ".": "./src/config.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prettier": "^3.8.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
