@@ -5,6 +5,7 @@ import { Glob } from 'bun';
 import path from 'node:path';
 import type { Config } from './config.ts';
 import { build } from './build.ts';
+import { loaderScript } from './loader-script.ts';
 
 export async function devServer(config: Config): Promise<void> {
   // Initial build
@@ -41,6 +42,16 @@ export async function devServer(config: Config): Promise<void> {
             headers: {
               ...corsHeaders(),
               'Content-Type': 'application/json; charset=utf-8',
+            },
+          });
+        }
+
+        // Return loader logic JS — eval'd in Tampermonkey sandbox
+        case '/_loader': {
+          return new Response(loaderScript(config.port), {
+            headers: {
+              ...corsHeaders(),
+              'Content-Type': 'application/javascript; charset=utf-8',
             },
           });
         }
