@@ -71,10 +71,10 @@ ${matchEntries}
     });
   }
 
-  // Poll until Cosense's page menu is rendered, then invoke the callback.
+  // Poll until Cosense's editor is rendered, then invoke the callback.
   function waitForCosenseReady(callback) {
     const check = setInterval(function () {
-      if (document.querySelector(".page-menu")) {
+      if (document.querySelector(".editor")) {
         clearInterval(check);
         callback();
       }
