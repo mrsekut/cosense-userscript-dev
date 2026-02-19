@@ -26,7 +26,7 @@ bun add -d cosense-userscript-dev
 
 ## Quick Start
 
-See [TUTORIAL.md](./TUTORIAL.md) for a detailed step-by-step walkthrough.
+See [TUTORIAL-ja.md](./TUTORIAL-ja.md) for a detailed step-by-step walkthrough.
 
 1. Generate the Tampermonkey bootstrap (one-time):
 
