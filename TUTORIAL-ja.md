@@ -91,6 +91,27 @@ cosense.PageMenu.addMenu({
 
 **ブラウザが自動でリロードされ**、変更が反映される。
 
+## 8. 完成したスクリプトを Cosense にデプロイする
+
+開発が完了したら、ビルド済みの JavaScriptコード を Cosense のページに貼り付ける。
+
+1. ビルドする（開発サーバー起動中ならすでにビルド済み）
+   ```bash
+   npx cosense-userscript-dev build
+   ```
+2. `dist/hello.js` の内容をコピー
+3. Cosense 上で 自分のページを開き、以下のようにコードブロックを書く:
+
+   ```
+   code:hello.js
+    // ここに dist/hello.js の内容を貼り付ける
+   ```
+
+## 9. クリーンアップ
+
+開発サーバを停止する（`Ctrl+C`）。
+開発中のスクリプトがクリーンアップされ、以降は Cosense に貼り付けたコードのみが実行される。
+
 ## 設定のカスタマイズ（任意）
 
 デフォルト設定を変更したい場合は `cosense-dev.config.ts` をプロジェクトルートに作成:
