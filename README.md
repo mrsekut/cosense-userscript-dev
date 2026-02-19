@@ -10,6 +10,10 @@ Write Cosense UserScripts in TypeScript, build and serve them locally, and see c
 - **Hot reload** — Edit in your editor, save, and changes are reflected in the browser automatically
 - **Zero config** — Just put `.ts` files in `scripts/` and run `bunx cosense-userscript-dev`
 
+## Demo
+
+[![Demo](https://i.gyazo.com/3ff734c0a2a477c9b933dd29066de3fd.gif)](https://gyazo.com/3ff734c0a2a477c9b933dd29066de3fd)
+
 ## Installation
 
 No install required — use `bunx` to run directly:
