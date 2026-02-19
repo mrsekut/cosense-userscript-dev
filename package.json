@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "type": "module",
   "bin": {
-    "cosense-userscript-dev": "./src/cli.ts"
+    "cosense-userscript-dev": "./bin/cli.js"
   },
   "exports": {
     ".": "./src/config.ts"
   },
   "files": [
-    "src"
+    "src",
+    "bin"
   ],
   "devDependencies": {
     "@types/bun": "latest",
