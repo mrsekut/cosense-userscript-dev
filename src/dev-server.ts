@@ -13,11 +13,24 @@ export async function devServer(config: Config): Promise<void> {
   const outDir = path.resolve(process.cwd(), config.outDir);
   const scriptsDir = path.resolve(process.cwd(), config.scriptsDir);
 
+  // Build version — incremented on each rebuild
+  let buildVersion = Date.now();
+
   // Start HTTP server with CORS headers
   const server = Bun.serve({
     port: config.port,
     async fetch(req) {
       const url = new URL(req.url);
+
+      // Return current build version
+      if (url.pathname === '/_version') {
+        return new Response(JSON.stringify({ version: buildVersion }), {
+          headers: {
+            ...corsHeaders(),
+            'Content-Type': 'application/json; charset=utf-8',
+          },
+        });
+      }
 
       // Return list of available scripts
       if (url.pathname === '/_scripts') {
@@ -59,6 +72,7 @@ export async function devServer(config: Config): Promise<void> {
     if (filename && filename.endsWith('.ts')) {
       console.log(`\nChanged: ${filename}`);
       await build(config);
+      buildVersion = Date.now();
     }
   });
 }

@@ -73,7 +73,30 @@ ${matchEntries}
     }, 100);
   }
 
-  waitForCosenseReady(loadAllScripts);
+  function watchForChanges() {
+    var currentVersion = null;
+    setInterval(function () {
+      GM_xmlhttpRequest({
+        method: "GET",
+        url: BASE + "/_version",
+        onload: function (response) {
+          if (response.status !== 200) return;
+          var v = JSON.parse(response.responseText).version;
+          if (currentVersion === null) {
+            currentVersion = v;
+          } else if (v !== currentVersion) {
+            console.log("[cosense-dev] Rebuild detected, reloading...");
+            location.reload();
+          }
+        },
+      });
+    }, 1000);
+  }
+
+  waitForCosenseReady(function () {
+    loadAllScripts();
+    watchForChanges();
+  });
 })();
 `;
 
