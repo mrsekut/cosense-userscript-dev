@@ -1,6 +1,7 @@
 // Dev server: builds, serves dist/ with CORS, and watches scripts/ for changes.
 
 import { watch } from 'node:fs';
+import { Glob } from 'bun';
 import path from 'node:path';
 import type { Config } from './config.ts';
 import { build } from './build.ts';
@@ -17,6 +18,19 @@ export async function devServer(config: Config): Promise<void> {
     port: config.port,
     async fetch(req) {
       const url = new URL(req.url);
+
+      // Return list of available scripts
+      if (url.pathname === '/_scripts') {
+        const glob = new Glob('*.js');
+        const files = await Array.fromAsync(glob.scan({ cwd: outDir }));
+        return new Response(JSON.stringify(files), {
+          headers: {
+            ...corsHeaders(),
+            'Content-Type': 'application/json; charset=utf-8',
+          },
+        });
+      }
+
       const filePath = path.join(outDir, url.pathname);
       const file = Bun.file(filePath);
 
