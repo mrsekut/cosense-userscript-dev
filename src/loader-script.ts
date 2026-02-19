@@ -46,20 +46,30 @@ function loadAllScripts() {
   });
 }
 
-// Poll /_version every second and reload the page when a rebuild is detected.
+// Poll /_version every second. Reload on rebuild or when the server goes down.
 function watchForChanges() {
   let currentVersion = null;
+  let failCount = 0;
+  const MAX_FAILURES = 3;
   setInterval(function () {
     GM_xmlhttpRequest({
       method: "GET",
       url: BASE + "/_version",
       onload: function (response) {
         if (response.status !== 200) return;
+        failCount = 0;
         const v = JSON.parse(response.responseText).version;
         if (currentVersion === null) {
           currentVersion = v;
         } else if (v !== currentVersion) {
           console.log("[cosense-dev] Rebuild detected, reloading...");
+          location.reload();
+        }
+      },
+      onerror: function () {
+        failCount++;
+        if (failCount >= MAX_FAILURES) {
+          console.log("[cosense-dev] Dev server stopped, reloading to clean up...");
           location.reload();
         }
       },
