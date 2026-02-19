@@ -23,8 +23,36 @@ ${matchEntries}
 (function () {
   "use strict";
 
-  var BASE = "http://localhost:${config.port}";
+  const BASE = "http://localhost:${config.port}";
 
+  waitForCosenseReady(function () {
+    loadAllScripts();
+    watchForChanges();
+  });
+
+  // Fetch the script list from /_scripts and load each one.
+  function loadAllScripts() {
+    GM_xmlhttpRequest({
+      method: "GET",
+      url: BASE + "/_scripts",
+      onload: function (response) {
+        if (response.status !== 200) {
+          console.error("[cosense-dev] Failed to fetch script list", response.status);
+          return;
+        }
+        const scripts = JSON.parse(response.responseText);
+        console.log("[cosense-dev] Loading " + scripts.length + " script(s)...");
+        scripts.forEach(function (file) {
+          loadScript(BASE + "/" + file);
+        });
+      },
+      onerror: function (error) {
+        console.warn("[cosense-dev] Dev server not running?", error);
+      },
+    });
+  }
+
+  // Fetch and eval a single script in the page context via unsafeWindow.eval().
   function loadScript(url) {
     GM_xmlhttpRequest({
       method: "GET",
@@ -43,29 +71,9 @@ ${matchEntries}
     });
   }
 
-  function loadAllScripts() {
-    GM_xmlhttpRequest({
-      method: "GET",
-      url: BASE + "/_scripts",
-      onload: function (response) {
-        if (response.status !== 200) {
-          console.error("[cosense-dev] Failed to fetch script list", response.status);
-          return;
-        }
-        var scripts = JSON.parse(response.responseText);
-        console.log("[cosense-dev] Loading " + scripts.length + " script(s)...");
-        scripts.forEach(function (file) {
-          loadScript(BASE + "/" + file);
-        });
-      },
-      onerror: function (error) {
-        console.warn("[cosense-dev] Dev server not running?", error);
-      },
-    });
-  }
-
+  // Poll until Cosense's page menu is rendered, then invoke the callback.
   function waitForCosenseReady(callback) {
-    var check = setInterval(function () {
+    const check = setInterval(function () {
       if (document.querySelector(".page-menu")) {
         clearInterval(check);
         callback();
@@ -73,15 +81,16 @@ ${matchEntries}
     }, 100);
   }
 
+  // Poll /_version every second and reload the page when a rebuild is detected.
   function watchForChanges() {
-    var currentVersion = null;
+    let currentVersion = null;
     setInterval(function () {
       GM_xmlhttpRequest({
         method: "GET",
         url: BASE + "/_version",
         onload: function (response) {
           if (response.status !== 200) return;
-          var v = JSON.parse(response.responseText).version;
+          const v = JSON.parse(response.responseText).version;
           if (currentVersion === null) {
             currentVersion = v;
           } else if (v !== currentVersion) {
@@ -92,11 +101,6 @@ ${matchEntries}
       });
     }, 1000);
   }
-
-  waitForCosenseReady(function () {
-    loadAllScripts();
-    watchForChanges();
-  });
 })();
 `;
 

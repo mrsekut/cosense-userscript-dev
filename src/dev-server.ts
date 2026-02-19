@@ -22,26 +22,28 @@ export async function devServer(config: Config): Promise<void> {
     async fetch(req) {
       const url = new URL(req.url);
 
-      // Return current build version
-      if (url.pathname === '/_version') {
-        return new Response(JSON.stringify({ version: buildVersion }), {
-          headers: {
-            ...corsHeaders(),
-            'Content-Type': 'application/json; charset=utf-8',
-          },
-        });
-      }
+      switch (url.pathname) {
+        // Return current build version
+        case '/_version': {
+          return new Response(JSON.stringify({ version: buildVersion }), {
+            headers: {
+              ...corsHeaders(),
+              'Content-Type': 'application/json; charset=utf-8',
+            },
+          });
+        }
 
-      // Return list of available scripts
-      if (url.pathname === '/_scripts') {
-        const glob = new Glob('*.js');
-        const files = await Array.fromAsync(glob.scan({ cwd: outDir }));
-        return new Response(JSON.stringify(files), {
-          headers: {
-            ...corsHeaders(),
-            'Content-Type': 'application/json; charset=utf-8',
-          },
-        });
+        // Return list of available scripts
+        case '/_scripts': {
+          const glob = new Glob('*.js');
+          const files = await Array.fromAsync(glob.scan({ cwd: outDir }));
+          return new Response(JSON.stringify(files), {
+            headers: {
+              ...corsHeaders(),
+              'Content-Type': 'application/json; charset=utf-8',
+            },
+          });
+        }
       }
 
       const filePath = path.join(outDir, url.pathname);
