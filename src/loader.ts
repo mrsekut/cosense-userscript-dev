@@ -3,12 +3,12 @@
 import path from 'node:path';
 import type { Config } from './config.ts';
 
-export async function generateLoader(config: Config): Promise<void> {
+export function loaderContent(config: Config): string {
   const matchEntries = config.match
     .map(m => `// @match        ${m}`)
     .join('\n');
 
-  const loader = `// ==UserScript==
+  return `// ==UserScript==
 // @name         cosense-userscript-dev loader
 // @namespace    cosense-userscript-dev
 // @version      1.0
@@ -40,8 +40,10 @@ ${matchEntries}
   });
 })();
 `;
+}
 
+export async function generateLoader(config: Config): Promise<void> {
   const loaderPath = path.resolve(process.cwd(), 'loader.user.js');
-  await Bun.write(loaderPath, loader);
+  await Bun.write(loaderPath, loaderContent(config));
   console.log('Generated loader.user.js');
 }

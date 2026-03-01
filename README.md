@@ -54,7 +54,7 @@ my-userscripts/
 bunx cosense-userscript-dev
 ```
 
-4. Copy the contents of `loader.user.js` into Tampermonkey. This is a one-time setup — the bootstrap is stable and does not need to be updated when you add scripts or update the library.
+4. Open http://localhost:3456/loader.user.js in the browser to install the Tampermonkey loader (one-click). This is a one-time setup — the bootstrap is stable and does not need to be updated when you add scripts or update the library.
 
 ## Commands
 

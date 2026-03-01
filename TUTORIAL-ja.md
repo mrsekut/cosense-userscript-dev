@@ -19,28 +19,9 @@ mkdir my-userscripts && cd my-userscripts
 npm init -y
 ```
 
-## 2. Tampermonkey 用のブートストラップを生成する
+## 2. Cosense UserScript を書く
 
-ターミナルで以下を実行:
-
-```bash
-npx cosense-userscript-dev loader
-```
-
-プロジェクトルートに `loader.user.js` が生成される。
-
-## 3. Tampermonkey にブートストラップをインストールする
-
-1. `loader.user.js` の内容をコピー
-2. ブラウザの Tampermonkey アイコンをクリック → 「新規スクリプトを作成」
-3. コピーした内容を貼り付け
-4. `Ctrl+S`（`Cmd+S`）で保存
-
-この登録は**初回のみ**。スクリプトの追加やライブラリの更新で Tampermonkey を触る必要はない。
-
-## 4. Cosense UserScript を書く
-
-`scripts/` ディレクトリを作り、TypeScript ファイルを置く。cosense` グローバルオブジェクトなど Cosense の API が使える。
+`scripts/` ディレクトリを作り、TypeScript ファイルを置く。`cosense` グローバルオブジェクトなど Cosense の API が使える。
 
 ```bash
 mkdir scripts
@@ -55,7 +36,7 @@ cosense.PageMenu.addMenu({
 });
 ```
 
-## 5. 開発サーバーを起動する
+## 3. 開発サーバーを起動する
 
 ```bash
 npx cosense-userscript-dev
@@ -66,17 +47,26 @@ npx cosense-userscript-dev
 ```
 Built 1 file(s) → dist/
 Serving dist/ at http://localhost:3456
+Install Tampermonkey loader: http://localhost:3456/loader.user.js
 Watching scripts/ for changes...
 ```
 
 この状態で `scripts/` 内のファイルを編集すると自動で再ビルドされ、ブラウザが自動でリロードされる。
 
-## 6. 動作確認
+## 4. Tampermonkey にブートストラップをインストールする
+
+👉 [ここをクリックしてインストール](http://localhost:3456/loader.user.js)
+
+Tampermonkey のインストール画面が表示されるので、「インストール」をクリックするだけで完了。
+
+この登録は**初回のみ**。スクリプトの追加やライブラリの更新で Tampermonkey を触る必要はない。
+
+## 5. 動作確認
 
 1. Cosense（`https://scrapbox.io/`）にて任意のページを開く
 2. 右側のページメニューに「hello」が追加されていれば成功
 
-## 7. スクリプトを編集してみる
+## 6. スクリプトを編集してみる
 
 開発サーバーが動いたまま `scripts/hello.ts` を編集して保存する。
 
@@ -91,7 +81,7 @@ cosense.PageMenu.addMenu({
 
 **ブラウザが自動でリロードされ**、変更が反映される。
 
-## 8. 完成したスクリプトを Cosense にデプロイする
+## 7. 完成したスクリプトを Cosense にデプロイする
 
 開発が完了したら、ビルド済みの JavaScriptコード を Cosense のページに貼り付ける。
 
@@ -107,7 +97,7 @@ cosense.PageMenu.addMenu({
     // ここに dist/hello.js の内容を貼り付ける
    ```
 
-## 9. クリーンアップ
+## 8. クリーンアップ
 
 開発サーバを停止する（`Ctrl+C`）。
 開発中のスクリプトがクリーンアップされ、以降は Cosense に貼り付けたコードのみが実行される。

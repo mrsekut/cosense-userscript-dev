@@ -6,6 +6,7 @@ import path from 'node:path';
 import type { Config } from './config.ts';
 import { build } from './build.ts';
 import { loaderScript } from './loader-script.ts';
+import { loaderContent } from './loader.ts';
 
 export async function devServer(config: Config): Promise<void> {
   // Initial build
@@ -55,6 +56,16 @@ export async function devServer(config: Config): Promise<void> {
             },
           });
         }
+
+        // Serve loader.user.js for Tampermonkey one-click install
+        case '/loader.user.js': {
+          return new Response(loaderContent(config), {
+            headers: {
+              ...corsHeaders(),
+              'Content-Type': 'application/javascript; charset=utf-8',
+            },
+          });
+        }
       }
 
       const filePath = path.join(outDir, url.pathname);
@@ -77,6 +88,9 @@ export async function devServer(config: Config): Promise<void> {
   });
 
   console.log(`Serving ${config.outDir}/ at http://localhost:${server.port}`);
+  console.log(
+    `Install Tampermonkey loader: http://localhost:${server.port}/loader.user.js`,
+  );
 
   // Watch scripts directory for changes
   console.log(`Watching ${config.scriptsDir}/ for changes...`);
